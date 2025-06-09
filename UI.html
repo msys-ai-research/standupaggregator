@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Assistant Toolkit - Standup Aggregator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.3s ease-out'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .desktop-frame {
+            width: 1200px;
+            height: 800px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            margin: 20px auto;
+            overflow: hidden;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    
+    <!-- Page 1: AI Assistant Toolkit Dashboard -->
+    <div class="desktop-frame bg-gradient-to-br from-blue-50 to-teal-50">
+        <div class="h-full flex flex-col">
+            <!-- Header -->
+            <header class="bg-white/80 backdrop-blur-sm border-b border-gray-200 px-8 py-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-teal-500 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h1 class="text-xl font-bold text-black">AI Assistant Toolkit</h1>
+                            <p class="text-sm text-gray-600">Powered by Advanced Intelligence</p>
+                        </div>
+                    </div>
+                    <nav class="flex items-center space-x-6">
+                        <a href="#" class="text-black hover:text-blue-600 transition-colors font-medium">Dashboard</a>
+                        <a href="#" class="text-gray-600 hover:text-black transition-colors">Analytics</a>
+                        <a href="#" class="text-gray-600 hover:text-black transition-colors">Settings</a>
+                        <div class="w-8 h-8 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full"></div>
+                    </nav>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="flex-1 p-8 overflow-y-auto">
+                <!-- Hero Section -->
+                <div class="text-center mb-12 animate-fade-in">
+                    <h2 class="text-4xl font-bold text-black mb-4">Powerful AI Assistant Toolkit</h2>
+                    <p class="text-xl text-gray-700 mb-8">Streamline your team operations with intelligent automation</p>
+                </div>
+
+                <!-- Analytics Dashboard -->
+                <div class="mb-12">
+                    <div class="text-center mb-8">
+                        <h3 class="text-2xl font-bold text-black mb-2">Real-Time Analytics Dashboard</h3>
+                        <p class="text-gray-600">Comprehensive insights powered by AI intelligence</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-8 mb-8">
+                        <!-- Pie Chart - Team Distribution -->
+                        <div class="bg-white/60 backdrop-blur-sm rounded-3xl p-6 hover:bg-white/80 transition-all duration-300">
+                            <div class="flex items-center justify-between mb-4">
+                                <h4 class="text-lg font-semibold text-black">Team Distribution</h4>
+                                <div class="w-3 h-3 bg-gradient-to-r from-blue-500 to-teal-500 rounded-full"></div>
+                            </div>
+                            <div class="relative h-64">
+                                <canvas id="pieChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Line Chart - Daily Participation -->
+                        <div class="bg-white/60 backdrop-blur-sm rounded-3xl p-6 hover:bg-white/80 transition-all duration-300">
+                            <div class="flex items-center justify-between mb-4">
+                                <h4 class="text-lg font-semibold text-black">Daily Participation</h4>
+                                <div class="w-3 h-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"></div>
+                            </div>
+                            <div class="relative h-64">
+                                <canvas id="lineChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-8">
+                        <!-- Heatmap - Team Activity -->
+                        <div class="bg-white/60 backdrop-blur-sm rounded-3xl p-6 hover:bg-white/80 transition-all duration-300">
+                            <div class="flex items-center justify-between mb-4">
+                                <h4 class="text-lg font-semibold text-black">Weekly Activity Heatmap</h4>
+                                <div class="w-3 h-3 bg-gradient-to-r from-green-500 to-blue-500 rounded-full"></div>
+                            </div>
+                            <div class="grid grid-cols-7 gap-1 h-64">
+                                <!-- Heatmap cells will be generated by JavaScript -->
+                                <div id="heatmapContainer" class="col-span-7 grid grid-cols-7 gap-1 h-full"></div>
+                            </div>
+                            <div class="flex justify-between text-xs text-gray-500 mt-2">
+                                <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                            </div>
+                        </div>
+
+                        <!-- Bar Chart - Blocker Resolution -->
+                        <div class="bg-white/60 backdrop-blur-sm rounded-3xl p-6 hover:bg-white/80 transition-all duration-300">
+                            <div class="flex items-center justify-between mb-4">
+                                <h4 class="text-lg font-semibold text-black">Blocker Resolution</h4>
+                                <div class="w-3 h-3 bg-gradient-to-r from-orange-500 to-red-500 rounded-full"></div>
+                            </div>
+                            <div class="relative h-64">
+                                <canvas id="barChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="grid grid-cols-4 gap-6 mb-12">
+                    <div class="bg-white/60 backdrop-blur-sm rounded-2xl p-6 text-center hover:bg-white/80 transition-all duration-300 hover:scale-105">
+                        <div class="text-3xl font-bold text-black mb-2">12</div>
+                        <div class="text-gray-600">Active Teams</div>
+                    </div>
+                    <div class="bg-white/60 backdrop-blur-sm rounded-2xl p-6 text-center hover:bg-white/80 transition-all duration-300 hover:scale-105">
+                        <div class="text-3xl font-bold text-black mb-2">89%</div>
+                        <div class="text-gray-600">Daily Participation</div>
+                    </div>
+                    <div class="bg-white/60 backdrop-blur-sm rounded-2xl p-6 text-center hover:bg-white/80 transition-all duration-300 hover:scale-105">
+                        <div class="text-3xl font-bold text-black mb-2">24</div>
+                        <div class="text-gray-600">Resolved Blockers</div>
+                    </div>
+                    <div class="bg-white/60 backdrop-blur-sm rounded-2xl p-6 text-center hover:bg-white/80 transition-all duration-300 hover:scale-105">
+                        <div class="text-3xl font-bold text-black mb-2">8.2</div>
+                        <div class="text-gray-600">Team Mood Avg</div>
+                    </div>
+                </div>
+
+                <!-- AI Tools Grid -->
+                <div class="grid grid-cols-2 gap-8">
+                    <!-- Standup Aggregator -->
+                    <div class="bg-gradient-to-br from-blue-400/20 to-teal-400/20 rounded-3xl p-8 hover:from-blue-400/30 hover:to-teal-400/30 transition-all duration-300 hover:scale-105 cursor-pointer">
+                        <div class="flex items-center mb-6">
+                            <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-teal-500 rounded-xl flex items-center justify-center mr-4">
+                                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold text-black">Standup Aggregator</h3>
+                                <p class="text-gray-700">Unified team pulse monitoring</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mb-6">Collect and analyze daily standups across all technology teams with AI-powered insights and real-time visibility.</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500">12 teams active</span>
+                            <button class="bg-white text-black px-6 py-2 rounded-xl hover:bg-gray-50 transition-colors font-medium">Launch Tool</button>
+                        </div>
+                    </div>
+
+                    <!-- Blocker Detection AI -->
+                    <div class="bg-gradient-to-br from-orange-400/20 to-red-400/20 rounded-3xl p-8 hover:from-orange-400/30 hover:to-red-400/30 transition-all duration-300 hover:scale-105 cursor-pointer">
+                        <div class="flex items-center mb-6">
+                            <div class="w-12 h-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-xl flex items-center justify-center mr-4">
+                                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold text-black">Blocker Detection AI</h3>
+                                <p class="text-gray-700">Intelligent issue identification</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mb-6">Automatically detect, categorize, and prioritize blockers from natural language input with smart escalation recommendations.</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500">24 blockers resolved</span>
+                            <button class="bg-white text-black px-6 py-2 rounded-xl hover:bg-gray-50 transition-colors font-medium">View Insights</button>
+                        </div>
+                    </div>
+
+                    <!-- Sentiment Analysis -->
+                    <div class="bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-3xl p-8 hover:from-purple-400/30 hover:to-pink-400/30 transition-all duration-300 hover:scale-105 cursor-pointer">
+                        <div class="flex items-center mb-6">
+                            <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mr-4">
+                                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold text-black">Sentiment Analysis</h3>
+                                <p class="text-gray-700">Team mood intelligence</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mb-6">Track team morale and individual sentiment trends with AI-powered analysis of communication patterns.</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500">8.2 avg mood score</span>
+                            <button class="bg-white text-black px-6 py-2 rounded-xl hover:bg-gray-50 transition-colors font-medium">Analyze Trends</button>
+                        </div>
+                    </div>
+
+                    <!-- Team Insights Generator -->
+                    <div class="bg-gradient-to-br from-green-400/20 to-blue-400/20 rounded-3xl p-8 hover:from-green-400/30 hover:to-blue-400/30 transition-all duration-300 hover:scale-105 cursor-pointer">
+                        <div class="flex items-center mb-6">
+                            <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-blue-500 rounded-xl flex items-center justify-center mr-4">
+                                <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold text-black">Team Insights Generator</h3>
+                                <p class="text-gray-700">Executive intelligence reports</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mb-6">Generate comprehensive reports and actionable recommendations for leadership with predictive analytics.</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-500">Daily reports ready</span>
+                            <button class="bg-white text-black px-6 py-2 rounded-xl hover:bg-gray-50 transition-colors font-medium">Generate Report</button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Page 2: Daily Standup Submission -->
+    <div class="desktop-frame bg-gradient-to-br from-purple-50 to-blue-50 mt-8">
+        <div class="h-full flex flex-col">
+            <!-- Header -->
+            <header class="bg-white/80 backdrop-blur-sm border-b border-gray-200 px-8 py-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                        <button class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-gray-200 transition-colors">
+                            <svg class="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                            </svg>
+                        </button>
+                        <div>
+                            <h1 class="text-xl font-bold text-black">Daily Standup</h1>
+                            <p class="text-sm text-gray-600">Frontend Development Team</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="text-sm text-gray-600">Today: March 15, 2024</div>
+                        <div class="w-8 h-8 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full"></div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="flex-1 flex overflow-hidden">
+                <!-- Form Section -->
+                <div class="flex-1 p-8 overflow-y-auto">
+                    <div class="max-w-2xl mx-auto">
+                        <div class="bg-white/60 backdrop-blur-sm rounded-3xl p-8 shadow-lg">
+                            <div class="mb-8">
+                                <h2 class="text-2xl font-bold text-black mb-2">Share Your Daily Update</h2>
+                                <p class="text-gray-600">Help your team stay aligned and identify any blockers early</p>
+                            </div>
+
+                            <form class="space-y-8">
+                                <!-- Yesterday's Work -->
+                                <div class="animate-slide-up">
+                                    <label class="block text-lg font-semibold text-black mb-3">
+                                        <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                        What did you accomplish yesterday?
+                                    </label>
+                                    <textarea class="w-full h-24 p-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none bg-white/80" 
+                                              placeholder="Describe your completed tasks and achievements..."></textarea>
+                                </div>
+
+                                <!-- Today's Plans -->
+                                <div class="animate-slide-up" style="animation-delay: 0.1s;">
+                                    <label class="block text-lg font-semibold text-black mb-3">
+                                        <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                        </svg>
+                                        What are you planning to work on today?
+                                    </label>
+                                    <textarea class="w-full h-24 p-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none bg-white/80" 
+                                              placeholder="Outline your goals and priorities for today..."></textarea>
+                                </div>
+
+                                <!-- Blockers -->
+                                <div class="animate-slide-up" style="animation-delay: 0.2s;">
+                                    <label class="block text-lg font-semibold text-black mb-3">
+                                        <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                                        </svg>
+                                        Any blockers or challenges?
+                                    </label>
+                                    <textarea class="w-full h-24 p-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none bg-white/80" 
+                                              placeholder="Describe any obstacles, dependencies, or help needed..."></textarea>
+                                    <div class="mt-2 text-sm text-gray-500">AI will automatically categorize and prioritize your blockers</div>
+                                </div>
+
+                                <!-- Mood Scale -->
+                                <div class="animate-slide-up" style="animation-delay: 0.3s;">
+                                    <label class="block text-lg font-semibold text-black mb-3">
+                                        <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                        How are you feeling today? (1-10)
+                                    </label>
+                                    <div class="flex items-center space-x-4">
+                                        <span class="text-sm text-gray-500">1</span>
+                                        <input type="range" min="1" max="10" value="8" class="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                                        <span class="text-sm text-gray-500">10</span>
+                                        <div class="w-12 h-12 bg-gradient-to-r from-green-400 to-blue-400 rounded-full flex items-center justify-center">
+                                            <span class="text-white font-bold">8</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Submit Button -->
+                                <div class="pt-6">
+                                    <button type="submit" class="w-full bg-gradient-to-r from-blue-500 to-teal-500 text-white py-4 px-8 rounded-2xl font-semibold hover:from-blue-600 hover:to-teal-600 transition-all duration-300 hover:scale-105 flex items-center justify-center space-x-2">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                                        </svg>
+                                        <span>Submit Daily Standup</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Analysis Sidebar -->
+                <div class="w-80 bg-white/40 backdrop-blur-sm border-l border-gray-200 p-6">
+                    <div class="mb-6">
+                        <h3 class="text-lg font-bold text-black mb-2">AI Analysis</h3>
+                        <p class="text-sm text-gray-600">Real-time insights as you type</p>
+                    </div>
+
+                    <!-- Sentiment Indicator -->
+                    <div class="bg-white/60 rounded-2xl p-4 mb-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-medium text-black">Sentiment</span>
+                            <span class="text-xs text-green-600 bg-green-100 px-2 py-1 rounded-full">Positive</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-gradient-to-r from-green-400 to-blue-400 h-2 rounded-full" style="width: 80%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Detected Blockers -->
+                    <div class="bg-white/60 rounded-2xl p-4 mb-4">
+                        <h4 class="text-sm font-medium text-black mb-3">Detected Issues</h4>
+                        <div class="space-y-2">
+                            <div class="text-xs text-gray-500">No blockers detected yet</div>
+                        </div>
+                    </div>
+
+                    <!-- Suggestions -->
+                    <div class="bg-white/60 rounded-2xl p-4 mb-4">
+                        <h4 class="text-sm font-medium text-black mb-3">AI Suggestions</h4>
+                        <div class="space-y-2 text-xs text-gray-600">
+                            <div class="flex items-start space-x-2">
+                                <div class="w-1 h-1 bg-blue-400 rounded-full mt-2"></div>
+                                <span>Consider mentioning specific metrics or outcomes</span>
+                            </div>
+                            <div class="flex items-start space-x-2">
+                                <div class="w-1 h-1 bg-blue-400 rounded-full mt-2"></div>
+                                <span>Include any dependencies on other teams</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="bg-white/60 rounded-2xl p-4">
+                        <h4 class="text-sm font-medium text-black mb-3">Recent Submissions</h4>
+                        <div class="space-y-3 text-xs">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-2 h-2 bg-green-400 rounded-full"></div>
+                                <span class="text-gray-600">Yesterday - Completed</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-2 h-2 bg-blue-400 rounded-full"></div>
+                                <span class="text-gray-600">2 days ago - Completed</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-2 h-2 bg-gray-300 rounded-full"></div>
+                                <span class="text-gray-400">3 days ago - Missed</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Page 3: Login Screen -->
+    <div class="desktop-frame bg-gradient-to-br from-indigo-50 to-purple-50 mt-8">
+        <div class="h-full flex">
+            <!-- Left Side - Branding -->
+            <div class="flex-1 bg-gradient-to-br from-indigo-600 to-purple-600 flex flex-col justify-center items-center p-12 text-white">
+                <div class="max-w-md text-center">
+                    <div class="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-8 mx-auto">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <h1 class="text-4xl font-bold mb-4">Welcome Back</h1>
+                    <p class="text-xl text-indigo-100 mb-8">Access your AI Assistant Toolkit and streamline your team operations with intelligent automation.</p>
+                    <div class="space-y-4 text-indigo-100">
+                        <div class="flex items-center space-x-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span>Real-time team analytics</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span>AI-powered blocker detection</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span>Intelligent sentiment analysis</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side - Login Form -->
+            <div class="flex-1 flex flex-col justify-center items-center p-12 bg-white/60 backdrop-blur-sm">
+                <div class="w-full max-w-md">
+                    <div class="text-center mb-8">
+                        <h2 class="text-3xl font-bold text-black mb-2">Sign In</h2>
+                        <p class="text-gray-600">Enter your credentials to access your dashboard</p>
+                    </div>
+
+                    <form class="space-y-6">
+                        <!-- Email Field -->
+                        <div class="animate-slide-up">
+                            <label for="email" class="block text-sm font-semibold text-black mb-2">
+                                Email Address
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path>
+                                    </svg>
+                                </div>
+                                <input 
+                                    type="email" 
+                                    id="email" 
+                                    name="email"
+                                    class="w-full pl-12 pr-4 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white/80 backdrop-blur-sm transition-all duration-300 hover:bg-white/90"
+                                    placeholder="Enter your email address"
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <!-- Password Field -->
+                        <div class="animate-slide-up" style="animation-delay: 0.1s;">
+                            <label for="password" class="block text-sm font-semibold text-black mb-2">
+                                Password
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                                    </svg>
+                                </div>
+                                <input 
+                                    type="password" 
+                                    id="password" 
+                                    name="password"
+                                    class="w-full pl-12 pr-12 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white/80 backdrop-blur-sm transition-all duration-300 hover:bg-white/90"
+                                    placeholder="Enter your password"
+                                    required
+                                >
+                                <button 
+                                    type="button" 
+                                    class="absolute inset-y-0 right-0 pr-4 flex items-center"
+                                    onclick="togglePassword()"
+                                >
+                                    <svg id="eyeIcon" class="w-5 h-5 text-gray-400 hover:text-gray-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Remember Me & Forgot Password -->
+                        <div class="flex items-center justify-between animate-slide-up" style="animation-delay: 0.2s;">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="w-4 h-4 text-indigo-600 bg-gray-100 border-gray-300 rounded focus:ring-indigo-500 focus:ring-2">
+                                <span class="ml-2 text-sm text-gray-600">Remember me</span>
+                            </label>
+                            <a href="#" class="text-sm text-indigo-600 hover:text-indigo-800 transition-colors font-medium">
+                                Forgot password?
+                            </a>
+                        </div>
+
+                        <!-- Sign In Button -->
+                        <div class="animate-slide-up" style="animation-delay: 0.3s;">
+                            <button 
+                                type="submit" 
+                                class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 px-8 rounded-2xl font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 hover:scale-105 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl"
+                            >
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
+                                </svg>
+                                <span>Sign In to Dashboard</span>
+                            </button>
+                        </div>
+
+                        <!-- Divider -->
+                        <div class="relative animate-slide-up" style="animation-delay: 0.4s;">
+                            <div class="absolute inset-0 flex items-center">
+                                <div class="w-full border-t border-gray-200"></div>
+                            </div>
+                            <div class="relative flex justify-center text-sm">
+                                <span class="px-4 bg-white/60 text-gray-500">New to our platform?</span>
+                            </div>
+                        </div>
+
+                        <!-- Sign Up Link -->
+                        <div class="text-center animate-slide-up" style="animation-delay: 0.5s;">
+                            <a href="#" class="text-indigo-600 hover:text-indigo-800 transition-colors font-medium">
+                                Create your account →
+                            </a>
+                        </div>
+                    </form>
+
+                    <!-- Security Notice -->
+                    <div class="mt-8 p-4 bg-gray-50/60 backdrop-blur-sm rounded-2xl animate-slide-up" style="animation-delay: 0.6s;">
+                        <div class="flex items-start space-x-3">
+                            <svg class="w-5 h-5 text-gray-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                            </svg>
+                            <div>
+                                <p class="text-sm text-gray-600">
+                                    <span class="font-medium">Secure Login:</span> Your data is protected with enterprise-grade encryption and security measures.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Password visibility toggle function
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('eyeIcon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.innerHTML = `
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"></path>
+                `;
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.innerHTML = `
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                `;
+            }
+        }
+
+        // Initialize charts when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Pie Chart - Team Distribution
+            const pieCtx = document.getElementById('pieChart').getContext('2d');
+            new Chart(pieCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Frontend', 'Backend', 'DevOps', 'QA', 'Mobile'],
+                    datasets: [{
+                        data: [30, 25, 15, 20, 10],
+                        backgroundColor: [
+                            'rgba(59, 130, 246, 0.8)',
+                            'rgba(16, 185, 129, 0.8)',
+                            'rgba(245, 101, 101, 0.8)',
+                            'rgba(139, 92, 246, 0.8)',
+                            'rgba(251, 191, 36, 0.8)'
+                        ],
+                        borderWidth: 0,
+                        cutout: '60%'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true,
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Line Chart - Daily Participation
+            const lineCtx = document.getElementById('lineChart').getContext('2d');
+            new Chart(lineCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Participation Rate',
+                        data: [85, 92, 88, 94, 89, 76, 82],
+                        borderColor: 'rgba(139, 92, 246, 1)',
+                        backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: 'rgba(139, 92, 246, 1)',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Heatmap - Team Activity
+            const heatmapContainer = document.getElementById('heatmapContainer');
+            const heatmapData = [
+                [0.2, 0.8, 0.9, 0.7, 0.6, 0.3, 0.1],
+                [0.4, 0.9, 0.8, 0.9, 0.8, 0.2, 0.1],
+                [0.3, 0.7, 0.9, 0.8, 0.7, 0.4, 0.2],
+                [0.5, 0.8, 0.9, 0.9, 0.8, 0.3, 0.1],
+                [0.6, 0.9, 0.8, 0.7, 0.9, 0.5, 0.3]
+            ];
+
+            heatmapData.forEach((week, weekIndex) => {
+                week.forEach((intensity, dayIndex) => {
+                    const cell = document.createElement('div');
+                    const opacity = Math.max(0.1, intensity);
+                    cell.className = 'rounded-sm transition-all duration-300 hover:scale-110 cursor-pointer';
+                    cell.style.backgroundColor = `rgba(34, 197, 94, ${opacity})`;
+                    cell.title = `Week ${weekIndex + 1}, Day ${dayIndex + 1}: ${Math.round(intensity * 100)}% activity`;
+                    heatmapContainer.appendChild(cell);
+                });
+            });
+
+            // Bar Chart - Blocker Resolution
+            const barCtx = document.getElementById('barChart').getContext('2d');
+            new Chart(barCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Critical', 'High', 'Medium', 'Low'],
+                    datasets: [{
+                        label: 'Resolved',
+                        data: [8, 15, 22, 18],
+                        backgroundColor: 'rgba(34, 197, 94, 0.8)',
+                        borderRadius: 8,
+                        borderSkipped: false,
+                    }, {
+                        label: 'Pending',
+                        data: [2, 5, 8, 12],
+                        backgroundColor: 'rgba(251, 191, 36, 0.8)',
+                        borderRadius: 8,
+                        borderSkipped: false,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true,
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+
+</body>
+</html> 
