@@ -27,5 +27,5 @@ This is a **Powerful AI Assistant Toolkit that user can develop their AI-powered
  
 - Simulate a **Product Manager's detailed functional and information architecture design**.
 - Follow the **design style** and **technical specifications** to generate a complete **UI design plan**.
-- Create a **UI.html** file that contains all pages displayed in a **horizontal layout**.
+- Create a **mobile_UI.html** file that contains all pages displayed in a **horizontal layout**.
 - Generate the **first two pages** now.
